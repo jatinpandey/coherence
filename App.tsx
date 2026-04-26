@@ -122,14 +122,18 @@ export default function App() {
       </View>
 
       <View style={styles.center}>
-        <BreathOrb progress={progress} size={orbSize} />
-        <View style={styles.label} pointerEvents="none">
+        <View style={styles.phaseLabelWrap}>
           <Text style={styles.phaseText}>
-            {running ? phaseLabel(phase) : null}
+            {running ? phaseLabel(phase) : ""}
           </Text>
-          <Text style={styles.countText}>
-            {running ? Math.ceil(phaseRemaining) : null}
-          </Text>
+        </View>
+        <View style={{ width: orbSize, height: orbSize }}>
+          <BreathOrb progress={progress} size={orbSize} />
+          <View style={styles.countWrap} pointerEvents="none">
+            <Text style={styles.countText}>
+              {running ? Math.ceil(phaseRemaining) : ""}
+            </Text>
+          </View>
         </View>
       </View>
 
@@ -141,7 +145,7 @@ export default function App() {
           />
           <Stat label="Cycles" value={String(cycleCount)} />
           <Stat
-            label="Br/min"
+            label="Breaths per min"
             value={(60 / Math.max(1, totalSec)).toFixed(1)}
           />
         </View>
@@ -193,28 +197,33 @@ const styles = StyleSheet.create({
   topBtnText: { color: "#e6e6e6", fontSize: 16, fontWeight: "600" },
   topBtnSub: { color: "#7a7a7a", fontSize: 12, marginTop: 2 },
   gear: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
     backgroundColor: "#161616",
     alignItems: "center",
     justifyContent: "center",
   },
-  gearText: { color: "#d4a574", fontSize: 18 },
+  gearText: { color: "#7ba8aa", fontSize: 28, lineHeight: 30 },
   center: { flex: 1, alignItems: "center", justifyContent: "center" },
-  label: {
-    position: "absolute",
-    alignItems: "center",
+  phaseLabelWrap: {
+    height: 28,
     justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 28,
   },
   phaseText: {
-    color: "#d4a574",
+    color: "#7ba8aa",
     fontSize: 13,
     fontWeight: "500",
     letterSpacing: 6,
     textTransform: "uppercase",
-    marginBottom: 14,
     opacity: 0.9,
+  },
+  countWrap: {
+    ...StyleSheet.absoluteFillObject,
+    alignItems: "center",
+    justifyContent: "center",
   },
   countText: {
     color: "#f5efe4",
@@ -244,7 +253,7 @@ const styles = StyleSheet.create({
     borderRadius: 32,
     backgroundColor: "transparent",
     borderWidth: 1,
-    borderColor: "#d4a574",
+    borderColor: "#7ba8aa",
     alignItems: "center",
     justifyContent: "center",
   },
@@ -252,7 +261,7 @@ const styles = StyleSheet.create({
     borderColor: "#3a3a3a",
   },
   runBtnText: {
-    color: "#d4a574",
+    color: "#7ba8aa",
     fontSize: 14,
     fontWeight: "500",
     letterSpacing: 4,

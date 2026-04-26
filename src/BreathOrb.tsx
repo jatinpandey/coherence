@@ -6,7 +6,7 @@ type Props = {
   size: number;
 };
 
-const ACCENT = "#d4a574";
+const ACCENT = "#7ba8aa";
 
 export function BreathOrb({ progress, size }: Props) {
   const scale = progress.interpolate({
