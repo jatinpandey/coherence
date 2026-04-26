@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dimensions,
   Pressable,
@@ -96,11 +96,6 @@ export default function App() {
     setSelectedId(null);
   };
 
-  const totalSec = useMemo(
-    () => pattern.inhale + pattern.holdIn + pattern.exhale + pattern.holdOut,
-    [pattern]
-  );
-
   const orbSize = Math.min(Dimensions.get("window").width * 0.78, 360);
   const remainingSession = Math.max(0, durationMin * 60 - elapsed);
   const presetName =
@@ -149,10 +144,6 @@ export default function App() {
             value={running ? fmt(remainingSession) : `${durationMin}:00`}
           />
           <Stat label="Cycles" value={String(cycleCount)} />
-          <Stat
-            label="Br/min"
-            value={(60 / Math.max(1, totalSec)).toFixed(1)}
-          />
           <Stat label="Streak" value={`${streak}d`} />
         </View>
 
