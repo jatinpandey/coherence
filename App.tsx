@@ -15,6 +15,8 @@ import { Settings } from "./src/Settings";
 import { PRESETS, phaseLabel, type Pattern, type Preset } from "./src/presets";
 import { useBreathCycle } from "./src/useBreathCycle";
 import { playPhaseTone } from "./src/audio";
+import { useStreak } from "./src/useStreak";
+import { MIN_SESSION_SECONDS } from "./src/streak";
 
 const STORE_KEY = "coherence:state:v1";
 
@@ -64,6 +66,13 @@ export default function App() {
       },
     });
 
+  const { streak, recordCompletion } = useStreak();
+
+  const finishSession = () => {
+    if (elapsed >= MIN_SESSION_SECONDS) recordCompletion();
+    stop();
+  };
+
   useEffect(() => {
     if (running) {
       activateKeepAwakeAsync().catch(() => {});
@@ -73,7 +82,7 @@ export default function App() {
   }, [running]);
 
   useEffect(() => {
-    if (running && elapsed >= durationMin * 60) stop();
+    if (running && elapsed >= durationMin * 60) finishSession();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [elapsed, running, durationMin]);
 
@@ -144,10 +153,11 @@ export default function App() {
             label="Br/min"
             value={(60 / Math.max(1, totalSec)).toFixed(1)}
           />
+          <Stat label="Streak" value={`${streak}d`} />
         </View>
 
         <Pressable
-          onPress={running ? stop : start}
+          onPress={running ? finishSession : start}
           style={[styles.runBtn, running && styles.runBtnStop]}
         >
           <Text style={styles.runBtnText}>{running ? "Stop" : "Begin"}</Text>
