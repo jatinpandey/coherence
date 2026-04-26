@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dimensions,
   Pressable,
@@ -15,6 +15,8 @@ import { Settings } from "./src/Settings";
 import { PRESETS, phaseLabel, type Pattern, type Preset } from "./src/presets";
 import { useBreathCycle } from "./src/useBreathCycle";
 import { playPhaseTone } from "./src/audio";
+import { useStreak } from "./src/useStreak";
+import { MIN_SESSION_SECONDS } from "./src/streak";
 
 const STORE_KEY = "coherence:state:v1";
 
@@ -64,6 +66,13 @@ export default function App() {
       },
     });
 
+  const { streak, recordCompletion } = useStreak();
+
+  const finishSession = () => {
+    if (elapsed >= MIN_SESSION_SECONDS) recordCompletion();
+    stop();
+  };
+
   useEffect(() => {
     if (running) {
       activateKeepAwakeAsync().catch(() => {});
@@ -73,7 +82,7 @@ export default function App() {
   }, [running]);
 
   useEffect(() => {
-    if (running && elapsed >= durationMin * 60) stop();
+    if (running && elapsed >= durationMin * 60) finishSession();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [elapsed, running, durationMin]);
 
@@ -86,11 +95,6 @@ export default function App() {
     setPattern(p);
     setSelectedId(null);
   };
-
-  const totalSec = useMemo(
-    () => pattern.inhale + pattern.holdIn + pattern.exhale + pattern.holdOut,
-    [pattern]
-  );
 
   const orbSize = Math.min(Dimensions.get("window").width * 0.78, 360);
   const remainingSession = Math.max(0, durationMin * 60 - elapsed);
@@ -144,14 +148,11 @@ export default function App() {
             value={running ? fmt(remainingSession) : `${durationMin}:00`}
           />
           <Stat label="Cycles" value={String(cycleCount)} />
-          <Stat
-            label="Breaths per min"
-            value={(60 / Math.max(1, totalSec)).toFixed(1)}
-          />
+          <Stat label="Streak" value={`${streak}d`} />
         </View>
 
         <Pressable
-          onPress={running ? stop : start}
+          onPress={running ? finishSession : start}
           style={[styles.runBtn, running && styles.runBtnStop]}
         >
           <Text style={styles.runBtnText}>{running ? "Stop" : "Begin"}</Text>
