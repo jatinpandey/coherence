@@ -28,6 +28,18 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "ba8a78f4-7061-47d6-863c-ad481a138315"
+      }
+    },
+    "owner": "jatinpandey",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/ba8a78f4-7061-47d6-863c-ad481a138315"
     }
   }
 }
