@@ -7,7 +7,7 @@ pkill -f "expo start" 2>/dev/null
 sleep 1
 
 # Start expo in background, log to file
-nohup npx expo start --clear > /tmp/expo-coherence.log 2>&1 &
+nohup npx expo start --offline --clear > /tmp/expo-coherence.log 2>&1 &
 echo "Expo started (PID $!). Log: /tmp/expo-coherence.log"
 echo "Waiting for Metro to be ready..."
 sleep 5
